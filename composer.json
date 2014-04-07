@@ -1,0 +1,21 @@
+{
+    "name": "advsm/masterfolio",
+    "version": "1.0.0",
+    "description": "Masterfolio API PHP Implementation",
+    "authors": [
+        {
+            "name": "Andrey Smirnov",
+            "email": "dev@antines.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4.12",
+        "zendframework/zend-http": "2.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Masterfolio\\": ""
+        }
+    }
+}
