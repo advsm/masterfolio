@@ -49,6 +49,19 @@ class Portfolio extends Active
         return $this->getSubActives();
     }
 
+    public function getProfitForPeriod($dateFrom, $dateTo)
+    {
+        $xml = $this->getClient()->send('getmonitor', [
+            'active'   => 2,
+            'public'   => 2,
+            'prevdate' => $dateFrom,
+            'date'     => $dateTo,
+            'currency' => 'USD',
+        ]);
+
+        return $xml;
+    }
+
     /**
      * Возвращает массив со всеми датами, для которых доступны записи активов.
      *

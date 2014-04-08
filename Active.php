@@ -95,65 +95,78 @@ abstract class Active
     }
 
     /**
-     * Загружает инвестиционный портфель из API Masterfolio.
+     * Возвращает баланс актива за определенную дату.
      *
-     * @return $this
+     * @param string $date Дата в формате Y-m-d
+     * @return float
      */
-    private function load()
+    public function getBalance($date)
     {
-        foreach ($this->getSubActivesFromApi() as $xml) {
-            $subActive = call_user_func(
-                [$this->getSubActiveClass(), 'fromXml'],
-                $xml
-            );
-
-            $subActive->setClient($this->getClient());
-            $this->addSubActive($subActive);
+        $balance = 0;
+        foreach ($this->getSubActives() as $active) {
+            $balance += $active->getBalance($date);
         }
+
+        return $balance;
     }
 
     /**
-     * Возвращает активы, входящие в состав данного актива.
+     * Возвращает сумму ввода-вывода средств за определенную дату.
      *
-     * @return Active[]
+     * @param string $date
+     * @return float
      */
-    protected function getSubActives()
+    public function getShift($date)
     {
-        if (!$this->subActives) {
-            $this->load();
+        $shift = 0;
+        foreach ($this->getSubActives() as $active) {
+            $shift += $active->getShift($date);
         }
 
-        return $this->subActives;
+        return $shift;
     }
 
     /**
-     * Добавляет составляющий актив в состав текущего актива.
+     * Возвращает прибыль актива за определенную дату.
      *
-     * @param Active $active
-     * @return $this
+     * @param string $date Дата в формате Y-m-d
+     * @return float
      */
-    protected function addSubActive(Active $active)
+    public function getProfit($date)
     {
-        $this->subActives[ $active->getId() ] = $active;
-        return $this;
+        $profit = 0;
+        foreach ($this->getSubActives() as $active) {
+            $profit += $active->getProfit($date);
+        }
+
+        return $profit;
     }
 
     /**
-     * Возвращает HTTP клиент для работы с API Masterfolio.
+     * Возвращает прибыль актива в процентах за определенную дату.
      *
-     * @return Api
+     * @param string $date Дата в формате Y-m-d
+     * @return float
      */
-    protected function getClient()
+    public function getRelativeDailyProfit($date)
     {
-        if (!$this->client) {
-            $this->client = new Api(
-                $this->getConfig()->getApiKey(),
-                $this->getConfig()->getEmail(),
-                $this->getConfig()->getPassword()
-            );
+        return 0;
+    }
+
+    /**
+     * Возвращает сумму в долларах.
+     *
+     * @param float $value
+     * @param string $currency
+     * @return float
+     */
+    public function getValue($value, $currency)
+    {
+        if ($currency == "RUR") {
+            return round($value/$this->getConfig()->getRurQuote(), 2);
         }
 
-        return $this->client;
+        return $value;
     }
 
     /**
@@ -244,6 +257,64 @@ abstract class Active
     }
 
     /**
+     * Возвращает активы, входящие в состав данного актива.
+     *
+     * @return Active[]
+     */
+    protected function getSubActives()
+    {
+        if (!$this->subActives) {
+            $this->load();
+        }
+
+        return $this->subActives;
+    }
+
+    /**
+     * Добавляет составляющий актив в состав текущего актива.
+     *
+     * @param Active $active
+     * @return $this
+     */
+    protected function addSubActive(Active $active)
+    {
+        $this->subActives[ $active->getId() ] = $active;
+        return $this;
+    }
+
+    /**
+     * Возвращает HTTP клиент для работы с API Masterfolio.
+     *
+     * @return Api
+     */
+    protected function getClient()
+    {
+        if (!$this->client) {
+            $this->client = new Api($this->getConfig());
+        }
+
+        return $this->client;
+    }
+
+    /**
+     * Загружает инвестиционный портфель из API Masterfolio.
+     *
+     * @return $this
+     */
+    private function load()
+    {
+        foreach ($this->getSubActivesFromApi() as $xml) {
+            $subActive = call_user_func(
+                [$this->getSubActiveClass(), 'fromXml'],
+                $xml
+            );
+
+            $subActive->setClient($this->getClient());
+            $this->addSubActive($subActive);
+        }
+    }
+
+    /**
      * Транслитерирует строку.
      *
      * @param string $string
@@ -264,80 +335,5 @@ abstract class Active
         ));
 
         return $string;
-    }
-
-    /**
-     * Возвращает баланс актива за определенную дату.
-     *
-     * @param string $date Дата в формате Y-m-d
-     * @return float
-     */
-    public function getBalance($date)
-    {
-        $balance = 0;
-        foreach ($this->getSubActives() as $active) {
-            $balance += $active->getBalance($date);
-        }
-
-        return $balance;
-    }
-
-    /**
-     * Возвращает сумму ввода-вывода средств за определенную дату.
-     *
-     * @param string $date
-     * @return float
-     */
-    public function getShift($date)
-    {
-        $shift = 0;
-        foreach ($this->getSubActives() as $active) {
-            $shift += $active->getShift($date);
-        }
-
-        return $shift;
-    }
-
-    /**
-     * Возвращает прибыль актива за определенную дату.
-     *
-     * @param string $date Дата в формате Y-m-d
-     * @return float
-     */
-    public function getProfit($date)
-    {
-        $profit = 0;
-        foreach ($this->getSubActives() as $active) {
-            $profit += $active->getProfit($date);
-        }
-
-        return $profit;
-    }
-
-    /**
-     * Возвращает прибыль актива в процентах за определенную дату.
-     *
-     * @param string $date Дата в формате Y-m-d
-     * @return float
-     */
-    public function getRelativeDailyProfit($date)
-    {
-        return 0;
-    }
-
-    /**
-     * Возвращает сумму в долларах.
-     *
-     * @param float $value
-     * @param string $currency
-     * @return float
-     */
-    public function getValue($value, $currency)
-    {
-        if ($currency == "RUR") {
-            return round($value/35.5, 2);
-        }
-
-        return $value;
     }
 }

@@ -40,6 +40,12 @@ class Config extends \Zend\Config\Config
         return $this->email;
     }
 
+    /**
+     * Возвращает пароль для доступа к Masterfolio.
+     *
+     * @return string
+     * @throws Exception
+     */
     public function getPassword()
     {
         if (!$this->password) {
@@ -47,5 +53,19 @@ class Config extends \Zend\Config\Config
         }
 
         return $this->password;
+    }
+
+    /**
+     * Возвращает курс рубля к доллару.
+     *
+     * @return float
+     */
+    public function getRurQuote()
+    {
+        if (!$this->rurQuote) {
+            return 35.5;
+        }
+
+        return $this->rurQuote;
     }
 }

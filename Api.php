@@ -38,17 +38,15 @@ class Api
     /**
      * Создает экземпляр клиента для работы с Masterfolio Api.
      *
-     * @param string $apiKey
-     * @param string $email
-     * @param string $password
+     * @param Config $config
      */
-    public function __construct($apiKey, $email, $password)
+    public function __construct(Config $config)
     {
-        $this->apiKey = $apiKey;
+        $this->apiKey = $config->getApiKey();
 
         $response = $this->send('auth', [
-            'email'    => $email,
-            'password' => $password,
+            'email'    => $config->getEmail(),
+            'password' => $config->getPassword(),
         ]);
 
         $this->token = current($response->xpath('//token'))->__toString();
