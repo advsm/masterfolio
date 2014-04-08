@@ -8,6 +8,7 @@ use Zend\Http\Client;
  * Class MasterfolioApi
  *
  * @link https://docs.google.com/document/d/1LK6Fy7N3HnqYWAFvf94muV3JHRIElitUaB-kXilvqjE/edit#
+ * @package Masterfolio
  */
 class Api
 {

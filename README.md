@@ -27,10 +27,15 @@ composer.phar install
 
 ```php
 // Инициализация API
-$portfolio = new Masterfolio\Portfolio('email', 'password', 'apikey');
+$config = new Masterfolio\Config(array(
+    'apiKey'   => '', // Ключ доступа к API. Выдается по запросу через тикеты
+    'email'    => '', // Логин для доступа к Masterfolio
+    'password' => '', // Пароль для доступа к Masterfolio
+));
+$portfolio = new Masterfolio\Portfolio($config);
 
 // Вывод прибыли по портфелю за 1 апреля 2014
-$portfolio->getProfit('2014-04-01');
+$portfolio->getProfit(strtotime('2014-04-01'));
 
 // Получение прибыли всех ПАММ счетов за 1 апреля 2014
 foreach ($portfolio->getBrokers() as $broker) {
@@ -38,7 +43,7 @@ foreach ($portfolio->getBrokers() as $broker) {
         printf(
             "%s: %s\n",
             $pamm->getName(),
-            $pamm->getProfit('2014-04-01')
+            $pamm->getProfit(strtotime('2014-04-01'))
         );
     }
 }

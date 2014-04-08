@@ -43,6 +43,13 @@ abstract class Active
     protected $subActives;
 
     /**
+     * Объект конфигурации API.
+     *
+     * @var Config
+     */
+    protected $config;
+
+    /**
      * Абстрактная функция, загружающая субактивы из Api.
      *
      * @return \SimpleXmlElement[]
@@ -54,6 +61,38 @@ abstract class Active
      * @return string
      */
     abstract protected function getSubActiveClass();
+
+    /**
+     * Констуктор
+     *
+     * @param Config $config
+     */
+    public function __construct(Config $config)
+    {
+        $this->setConfig($config);
+    }
+
+    /**
+     * Устанавливает объект конфигурации API для актива.
+     *
+     * @param Config $config
+     * @return $this
+     */
+    public function setConfig(Config $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * Возвращает объект конфигурации API.
+     *
+     * @return Config
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
 
     /**
      * Загружает инвестиционный портфель из API Masterfolio.
@@ -107,8 +146,11 @@ abstract class Active
     protected function getClient()
     {
         if (!$this->client) {
-            throw new Exception('Client configuration is not implemented');
-            $this->client = new Api('', '', '');
+            $this->client = new Api(
+                $this->getConfig()->getApiKey(),
+                $this->getConfig()->getEmail(),
+                $this->getConfig()->getPassword()
+            );
         }
 
         return $this->client;
