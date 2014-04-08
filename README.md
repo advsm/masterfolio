@@ -35,7 +35,7 @@ $config = new Masterfolio\Config(array(
 $portfolio = new Masterfolio\Portfolio($config);
 
 // Вывод прибыли по портфелю за 1 апреля 2014
-$portfolio->getProfit(strtotime('2014-04-01'));
+$portfolio->getProfit('2014-04-01');
 
 // Получение прибыли всех ПАММ счетов за 1 апреля 2014
 foreach ($portfolio->getBrokers() as $broker) {
@@ -43,7 +43,7 @@ foreach ($portfolio->getBrokers() as $broker) {
         printf(
             "%s: %s\n",
             $pamm->getName(),
-            $pamm->getProfit(strtotime('2014-04-01'))
+            $pamm->getProfit('2014-04-01')
         );
     }
 }
