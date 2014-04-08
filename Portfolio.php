@@ -141,4 +141,16 @@ class Portfolio extends Active
 
         return null;
     }
+
+    /**
+     * Заглушка.
+     * Весь портфель не может быть инициализирован из XML.
+     *
+     * @param \SimpleXMLElement $xml
+     * @return $this
+     */
+    public function fromXml(\SimpleXMLElement $xml)
+    {
+        return $this;
+    }
 }

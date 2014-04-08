@@ -48,12 +48,11 @@ class Broker extends Active
      * @param \SimpleXmlElement $xml
      * @return $this
      */
-    public static function fromXml(\SimpleXMLElement $xml)
+    public function fromXml(\SimpleXMLElement $xml)
     {
-        $broker = new self();
-        $broker->setId($xml->id->__toString());
-        $broker->setName($xml->platform_name->__toString());
-        return $broker;
+        $this->setId($xml->id->__toString());
+        $this->setName($xml->platform_name->__toString());
+        return $this;
     }
 
     /**

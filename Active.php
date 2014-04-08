@@ -63,6 +63,14 @@ abstract class Active
     abstract protected function getSubActiveClass();
 
     /**
+     * Прогрузка параметров актива из XML ответа от API.
+     *
+     * @param \SimpleXMLElement $xml
+     * @return $this
+     */
+    abstract public function fromXml(\SimpleXMLElement $xml);
+
+    /**
      * Констуктор
      *
      * @param Config $config
@@ -304,12 +312,13 @@ abstract class Active
     private function load()
     {
         foreach ($this->getSubActivesFromApi() as $xml) {
-            $subActive = call_user_func(
-                [$this->getSubActiveClass(), 'fromXml'],
-                $xml
-            );
+            $class = $this->getSubActiveClass();
 
+            /** @var Active $subActive */
+            $subActive = new $class($this->getConfig());
             $subActive->setClient($this->getClient());
+            $subActive->fromXml($xml);
+
             $this->addSubActive($subActive);
         }
     }

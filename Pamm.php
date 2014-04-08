@@ -33,7 +33,7 @@ class Pamm extends Active
      */
     protected function getSubActiveClass()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception('Памм счета не содержат вложенных активов');
     }
 
     /**
@@ -45,21 +45,20 @@ class Pamm extends Active
      */
     protected function getSubActivesFromApi()
     {
-        throw new \Exception('Not implemented');
+        throw new Exception('Памм счета не содержат вложенных активов');
     }
 
     /**
-     * Прогружает все данные брокера, используя XML ответ от API.
+     * Прогружает все данные ПАММ счета, используя XML ответ от API.
      *
      * @param \SimpleXmlElement $xml
      * @return $this
      */
-    public static function fromXml(\SimpleXMLElement $xml)
+    public function fromXml(\SimpleXMLElement $xml)
     {
-        $pamm = new self();
-        $pamm->setId($xml->id->__toString());
-        $pamm->setName($xml->name->__toString());
-        return $pamm;
+        $this->setId($xml->id->__toString());
+        $this->setName($xml->name->__toString());
+        return $this;
     }
 
     /**
