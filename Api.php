@@ -62,6 +62,7 @@ class Api
     {
         if (!$this->client) {
             $this->client = new Client();
+            $this->client->setOptions(array('sslverifypeer' => false));
         }
 
         return $this->client;
