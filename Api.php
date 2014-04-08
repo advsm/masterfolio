@@ -89,25 +89,6 @@ class Api
             ->send();
         $body = $response->getBody();
 
-        $this->log($this->getClient()->getLastRawRequest());
-        $this->log($this->getClient()->getLastRawResponse());
-
         return new \SimpleXmlElement($body);
     }
-
-    /**
-     * Выводит в лог сообщение.
-     *
-     * @param string $message
-     * @return void
-     */
-    private function log($message)
-    {
-        $date = date('Y-m-d H:i:s');
-        $f = fopen('api.log', 'a');
-        fwrite($f, "[$date] $message");
-        fclose($f);
-    }
-
-
 }
